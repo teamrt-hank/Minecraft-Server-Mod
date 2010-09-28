@@ -49,7 +49,9 @@ public class id extends ej
         this.c = true;
     }
 
+	// Player moved?
     public void a(gf paramgf) {
+		
         double d1;
         if (!this.j) {
             d1 = paramgf.b - this.h;
@@ -119,9 +121,31 @@ public class id extends ej
 
             this.e.w = paramgf.g;
             this.d.f.b(this.e);
+			
+			
+			// Buffer messages, to only send a small number
+			if (!etc.getServer().isTimerExpired("playermoved_initial:"+this.e.aq.toLowerCase())) {
+				etc.getServer().setTimer("playermoved_repeat:"+this.e.aq.toLowerCase(), 50);
+				// a.info("TimerInitialExpired" + this.e.aq.toLowerCase());
+				etc.getInstance().getLoader().callHook(PluginLoader.HOOKS.PLAYER_MOVED, new Object[] {this.e});
+        	}
+			else if (!etc.getServer().isTimerExpired("playermoved_repeat:"+this.e.aq.toLowerCase()))
+			{
+				// a.info("TimerRepeatExpired" + this.e.aq.toLowerCase());
+				etc.getServer().setTimer("playermoved_repeat:"+this.e.aq.toLowerCase(), 50);
+				etc.getInstance().getLoader().callHook(PluginLoader.HOOKS.PLAYER_MOVED, new Object[] {this.e});
+			}
+        	else
+        	{
+				//a.info("PlayerMoved time still running" + this.e.aq.toLowerCase());
+        	}
+			etc.getServer().setTimer("playermoved_initial:"+this.e.aq.toLowerCase(), 50);
+			
+			
         }
     }
-
+	
+	// Login location?
     public void a(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {
         this.j = false;
         this.g = paramDouble1;
@@ -129,6 +153,7 @@ public class id extends ej
         this.i = paramDouble3;
         this.e.b(paramDouble1, paramDouble2, paramDouble3, paramFloat1, paramFloat2);
         this.e.a.b(new dq(paramDouble1, paramDouble2 + 1.620000004768372D, paramDouble2, paramDouble3, paramFloat1, paramFloat2, false));
+		
     }
 
     //Destroy function
@@ -226,6 +251,8 @@ public class id extends ej
             else if(paramfe.e == 5)
                 blockPlaced.setX(blockPlaced.getX() + 1);
             Block blockClicked = new Block(etc.getServer().getBlockIdAt(m, n, i1), m, n, i1);
+			
+			
 
             if (!(Boolean)etc.getInstance().getLoader().callHook(PluginLoader.HOOKS.BLOCK_CREATED, new Object[] {e, blockPlaced, blockClicked, paramfe.a})) {
                 if (localgp != null) {
@@ -279,6 +306,7 @@ public class id extends ej
         localfn.q = (paramk.g / 128.0D);
         localfn.ad = 10;
         this.d.e.a(localfn);
+		
     }
 
     public void a(ba paramba) {
@@ -1079,12 +1107,20 @@ public class id extends ej
                 msg(Colors.Rose + "Plugin enabled.");
             } else if (split[0].equalsIgnoreCase("/disableplugin")) {
                 if (split.length < 2) {
-                    msg(Colors.Rose + "Correct usage is: /enableplugin [plugin]");
+                    msg(Colors.Rose + "Correct usage is: /disableplugin [plugin]");
                     return;
                 }
 
                 etc.getInstance().getLoader().disablePlugin(split[1]);
                 msg(Colors.Rose + "Plugin disabled.");
+            } else if (split[0].equalsIgnoreCase("/reloadplugin")) {
+                if (split.length < 2) {
+                    msg(Colors.Rose + "Correct usage is: /reloadplugin [plugin]");
+                    return;
+                }
+
+                etc.getInstance().getLoader().reloadPlugin(split[1]);
+                msg(Colors.Rose + "Plugin reloaded.");
             } else if (split[0].equalsIgnoreCase("/compass")) {
                 double degreeRotation = ((e.r - 90) % 360);
                 if (degreeRotation < 0) {

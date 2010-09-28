@@ -141,6 +141,10 @@ public class etc {
         commands.put("/modify", "[player] [key] [value] - Type /modify for more info");
         commands.put("/whitelist", "[operation (add or remove)] [player]");
         commands.put("/reservelist", "[operation (add or remove)] [player]");
+		commands.put("/listplugins", "- List all plugins");
+		commands.put("/disableplugin", "[plugin] - Disable plugin");
+		commands.put("/enableplugin", "[plugin] - Enable plugin");
+		commands.put("/reloadplugin", "[plugin] - Reload plugin (including .jar)");
 
         load();
     }

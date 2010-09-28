@@ -29,6 +29,7 @@ public class PluginLoader {
         KICK,
         BLOCK_CREATED,
         BLOCK_DESTROYED,
+		PLAYER_MOVED,
     }
     private static final Logger log = Logger.getLogger("Minecraft");
     private static final Object lock = new Object();
@@ -160,6 +161,47 @@ public class PluginLoader {
             }
         }
     }
+	
+	/**
+     * Reloads specified plugin
+     * @param name
+     */
+    public void reloadPlugin(String name) {
+        Plugin plugin = getPlugin(name);
+        if (plugin != null) {
+            if (plugin.isEnabled()) {
+                plugin.toggleEnabled();
+                plugin.disable();
+            }
+			plugins.remove(plugin);
+        }
+			
+		try {
+            File file = new File("plugins/" + name + ".jar");
+            URLClassLoader child = null;
+            try {
+                child = new URLClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
+            } catch (MalformedURLException ex) {
+                log.log(Level.SEVERE, "Exception while loading class", ex);
+            }
+            Class c = Class.forName(name, true, child);
+
+            try {
+                Plugin newplugin = (Plugin) c.newInstance();
+                newplugin.setName(name);
+                newplugin.enable();
+                synchronized (lock) {
+                    plugins.add(newplugin);
+                }
+            } catch (InstantiationException ex) {
+                log.log(Level.SEVERE, "Exception while loading plugin", ex);
+            } catch (IllegalAccessException ex) {
+                log.log(Level.SEVERE, "Exception while loading plugin", ex);
+            }
+        } catch (ClassNotFoundException ex) {
+            log.log(Level.SEVERE, "Exception while loading plugin", ex);
+        }
+    }
 
     /**
      * Returns the server
@@ -218,6 +260,10 @@ public class PluginLoader {
                                 if (plugin.onBlockDestroy(new Player((ea) parameters[0]), (Block)parameters[1]))
                                     toRet = true;
                                 break;
+							case PLAYER_MOVED:
+								if (plugin.onPlayerMoved(new Player((ea) parameters[0])))
+									toRet = true;
+								break;
                         }
                     } catch (UnsupportedOperationException ex) {
                     }

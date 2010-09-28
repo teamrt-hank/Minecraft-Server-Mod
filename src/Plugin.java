@@ -119,4 +119,12 @@ public abstract class Plugin {
      * @return
      */
     public boolean onBlockDestroy(Player player, Block block) { return false; }
+	
+	
+    /**
+     * Called when a person moves
+     * @param player
+     * @return
+     */
+    public boolean onPlayerMoved(Player player) { return false; }
 }
