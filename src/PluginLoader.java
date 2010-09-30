@@ -70,6 +70,7 @@ public class PluginLoader {
             } catch (MalformedURLException ex) {
                 log.log(Level.SEVERE, "Exception while loading class", ex);
             }
+			
             Class c = Class.forName(fileName, true, child);
 
             try {
@@ -261,8 +262,7 @@ public class PluginLoader {
                                     toRet = true;
                                 break;
 							case PLAYER_MOVED:
-								if (plugin.onPlayerMoved(new Player((ea) parameters[0])))
-									toRet = true;
+								plugin.onPlayerMoved(new Player((ea) parameters[0]));
 								break;
                         }
                     } catch (UnsupportedOperationException ex) {

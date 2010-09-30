@@ -126,5 +126,5 @@ public abstract class Plugin {
      * @param player
      * @return
      */
-    public boolean onPlayerMoved(Player player) { return false; }
+    public void onPlayerMoved(Player player) { }
 }
