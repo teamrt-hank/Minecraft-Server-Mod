@@ -19,7 +19,7 @@ import net.minecraft.server.MinecraftServer;
  */
 public class PluginLoader {
 
-    public enum HOOKS {
+    public enum Hook {
         LOGINCHECK,
         LOGIN,
         CHAT,
@@ -29,7 +29,8 @@ public class PluginLoader {
         KICK,
         BLOCK_CREATED,
         BLOCK_DESTROYED,
-		PLAYER_MOVED,
+	PLAYER_MOVED,
+        DISCONNECT,
     }
     private static final Logger log = Logger.getLogger("Minecraft");
     private static final Object lock = new Object();
@@ -66,7 +67,7 @@ public class PluginLoader {
             File file = new File("plugins/" + fileName + ".jar");
             URLClassLoader child = null;
             try {
-                child = new URLClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
+                child = new MyClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
             } catch (MalformedURLException ex) {
                 log.log(Level.SEVERE, "Exception while loading class", ex);
             }
@@ -87,6 +88,44 @@ public class PluginLoader {
             }
         } catch (ClassNotFoundException ex) {
             log.log(Level.SEVERE, "Exception while loading plugin", ex);
+        }
+    }
+
+    /**
+     * Reloads the specified plugin
+     */
+    public void reload(String fileName) {
+        /* Not sure exactly how much of this is necessary */
+        Plugin toNull = getPlugin(fileName);
+        if (toNull.isEnabled())
+            toNull.disable();
+        plugins.remove(toNull);
+        toNull = null;
+
+        try {
+            File file = new File("plugins/" + fileName + ".jar");
+            URLClassLoader child = null;
+            try {
+                child = new MyClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
+            } catch (MalformedURLException ex) {
+                log.log(Level.SEVERE, "Exception while loading class", ex);
+            }
+            Class c = Class.forName(fileName, true, child);
+
+            try {
+                Plugin plugin = (Plugin) c.newInstance();
+                plugin.setName(fileName);
+                plugin.enable();
+                synchronized (lock) {
+                    plugins.add(plugin);
+                }
+            } catch (InstantiationException ex) {
+                log.log(Level.SEVERE, "Exception while reloading plugin", ex);
+            } catch (IllegalAccessException ex) {
+                log.log(Level.SEVERE, "Exception while reloading plugin", ex);
+            }
+        } catch (ClassNotFoundException ex) {
+            log.log(Level.SEVERE, "Exception while reloading plugin", ex);
         }
     }
 
@@ -219,7 +258,7 @@ public class PluginLoader {
      * @param parameters
      * @return
      */
-    public Object callHook(HOOKS h, Object[] parameters) {
+    public Object callHook(Hook h, Object[] parameters) {
         Object toRet = false;
         synchronized (lock) {
             try {
@@ -236,6 +275,9 @@ public class PluginLoader {
                                 break;
                             case LOGIN:
                                 plugin.onLogin(new Player((ea) parameters[0]));
+                                break;
+                            case DISCONNECT:
+                                plugin.onDisconnect(new Player((ea) parameters[0]));
                                 break;
                             case CHAT:
                                 if (plugin.onChat(new Player((ea) parameters[0]), (String)parameters[1]))
