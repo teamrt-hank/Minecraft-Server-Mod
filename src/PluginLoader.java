@@ -175,6 +175,7 @@ public class PluginLoader {
                 plugin.disable();
             }
 			plugins.remove(plugin);
+			plugin=null;
         }
 			
 		try {
