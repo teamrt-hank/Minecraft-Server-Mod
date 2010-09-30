@@ -1104,7 +1104,7 @@ public class id extends ej
                     return;
                 }
 
-                etc.getInstance().getLoader().reload(split[1]);
+                etc.getInstance().getLoader().reloadPlugin(split[1]);
                 msg(Colors.Rose + "Plugin reloaded.");
             } else if (split[0].equalsIgnoreCase("/enableplugin")) {
                 if (split.length < 2) {
@@ -1122,14 +1122,6 @@ public class id extends ej
 
                 etc.getInstance().getLoader().disablePlugin(split[1]);
                 msg(Colors.Rose + "Plugin disabled.");
-            } else if (split[0].equalsIgnoreCase("/reloadplugin")) {
-                if (split.length < 2) {
-                    msg(Colors.Rose + "Correct usage is: /reloadplugin [plugin]");
-                    return;
-                }
-
-                etc.getInstance().getLoader().reloadPlugin(split[1]);
-                msg(Colors.Rose + "Plugin reloaded.");
             } else if (split[0].equalsIgnoreCase("/compass")) {
                 double degreeRotation = ((e.r - 90) % 360);
                 if (degreeRotation < 0) {
