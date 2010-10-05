@@ -127,13 +127,13 @@ public class id extends ej
 			if (!etc.getServer().isTimerExpired("playermoved_initial:"+this.e.aq.toLowerCase())) {
 				etc.getServer().setTimer("playermoved_repeat:"+this.e.aq.toLowerCase(), 50);
 				// a.info("TimerInitialExpired" + this.e.aq.toLowerCase());
-				etc.getInstance().getLoader().callHook(PluginLoader.HOOKS.PLAYER_MOVED, new Object[] {this.e});
+				etc.getInstance().getLoader().callHook(PluginLoader.Hook.PLAYER_MOVED, new Object[] {this.e});
         	}
 			else if (!etc.getServer().isTimerExpired("playermoved_repeat:"+this.e.aq.toLowerCase()))
 			{
 				// a.info("TimerRepeatExpired" + this.e.aq.toLowerCase());
 				etc.getServer().setTimer("playermoved_repeat:"+this.e.aq.toLowerCase(), 50);
-				etc.getInstance().getLoader().callHook(PluginLoader.HOOKS.PLAYER_MOVED, new Object[] {this.e});
+				etc.getInstance().getLoader().callHook(PluginLoader.Hook.PLAYER_MOVED, new Object[] {this.e});
 			}
         	else
         	{
