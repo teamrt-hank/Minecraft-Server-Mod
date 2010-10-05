@@ -66,17 +66,10 @@ public class etc {
         commands.put("/modify", "[player] [key] [value] - Type /modify for more info");
         commands.put("/whitelist", "[operation (add or remove)] [player]");
         commands.put("/reservelist", "[operation (add or remove)] [player]");
-<<<<<<< HEAD
-		commands.put("/listplugins", "- List all plugins");
-		commands.put("/disableplugin", "[plugin] - Disable plugin");
-		commands.put("/enableplugin", "[plugin] - Enable plugin");
-		commands.put("/reloadplugin", "[plugin] - Reload plugin (including .jar)");
-=======
         commands.put("/enableplugin", "[plugin] - Enables plugin");
         commands.put("/disableplugin", "[plugin] - Disables plugin");
         commands.put("/listplugins", "- Lists all plugins");
         commands.put("/reloadplugin", "[plugin] - Reloads plugin");
->>>>>>> upstream/master
 
         load();
     }

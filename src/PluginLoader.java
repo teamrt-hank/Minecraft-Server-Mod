@@ -25,7 +25,6 @@ public class PluginLoader {
         KICK,
         BLOCK_CREATED,
         BLOCK_DESTROYED,
-	PLAYER_MOVED,
         DISCONNECT,
         PLAYER_MOVE
     }
@@ -63,37 +62,7 @@ public class PluginLoader {
     public void loadPlugin(String fileName) {
         if (getPlugin(fileName) != null)
             return; //Already exists.
-<<<<<<< HEAD
-
-        try {
-            File file = new File("plugins/" + fileName + ".jar");
-            URLClassLoader child = null;
-            try {
-                child = new MyClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
-            } catch (MalformedURLException ex) {
-                log.log(Level.SEVERE, "Exception while loading class", ex);
-            }
-			
-            Class c = Class.forName(fileName, true, child);
-
-            try {
-                Plugin plugin = (Plugin) c.newInstance();
-                plugin.setName(fileName);
-                plugin.enable();
-                synchronized (lock) {
-                    plugins.add(plugin);
-                }
-            } catch (InstantiationException ex) {
-                log.log(Level.SEVERE, "Exception while loading plugin", ex);
-            } catch (IllegalAccessException ex) {
-                log.log(Level.SEVERE, "Exception while loading plugin", ex);
-            }
-        } catch (ClassNotFoundException ex) {
-            log.log(Level.SEVERE, "Exception while loading plugin", ex);
-        }
-=======
         load(fileName);
->>>>>>> upstream/master
     }
 
     /**
@@ -212,8 +181,6 @@ public class PluginLoader {
             }
         }
     }
-	
-
 
     /**
      * Returns the server
@@ -275,15 +242,9 @@ public class PluginLoader {
                                 if (plugin.onBlockDestroy(((ea) parameters[0]).getPlayer(), (Block)parameters[1]))
                                     toRet = true;
                                 break;
-<<<<<<< HEAD
-							case PLAYER_MOVED:
-								plugin.onPlayerMoved(new Player((ea) parameters[0]));
-								break;
-=======
                             case PLAYER_MOVE:
                                 plugin.onPlayerMove(((ea) parameters[0]).getPlayer(), (Location)parameters[1], (Location)parameters[2]);
                                 break;
->>>>>>> upstream/master
                         }
                     } catch (UnsupportedOperationException ex) {
                     }
