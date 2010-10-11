@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="Minecraft-Server-Mod">
     <property environment="env"/>
@@ -82,3 +83,10 @@
         </copy>
     </target>
 </project>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Minecraft_Mod" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Minecraft_Mod.</description>
+    <import file="nbproject/build-impl.xml"/>
+</project>
+>>>>>>> 2d5d1d5a4ee070fabe8897ba828beecec48b9c39
