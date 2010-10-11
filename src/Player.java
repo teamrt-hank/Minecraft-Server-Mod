@@ -602,14 +602,6 @@ public class Player {
     }
 
     /**
-     * Returns item id in player's hand
-     * @return
-     */
-    public int getItemInHand() {
-        return user.a.getItemInHand();
-    }
-
-    /**
      * Returns this player's inventory
      * @return inventory
      */

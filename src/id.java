@@ -32,15 +32,6 @@ public class id extends ej
         paramea.a = this;
     }
 
-	/**
- 	
-     * Returns the item in player's hand	
-     * @return
-     */
- 		
-    public int getItemInHand() {
-        return k.c;
-    }
 
     /**
      * Returns the item in player's hand
