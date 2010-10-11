@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="Minecraft-Server-Mod">
     <property environment="env"/>
-    <property name="version" value="65dev"/>
+    <property name="version" value="66dev"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.5"/>
     <property name="source" value="1.5"/>
