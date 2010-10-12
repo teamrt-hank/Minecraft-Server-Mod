@@ -22,7 +22,6 @@ public class id extends ej
     private boolean j = true;
     private gp k = null;
     private List<String> onlyOneUseKits = new ArrayList<String>();
-    private static final int COMMANDS_PER_PAGE = 7;
 
     public id(MinecraftServer paramMinecraftServer, bb parambb, ea paramea) {
         this.d = paramMinecraftServer;
@@ -88,7 +87,7 @@ public class id extends ej
             to.rotX = (int)e.r;
             to.rotY = (int)e.s;
 
-            etc.getInstance().getLoader().callHook(PluginLoader.Hook.PLAYER_MOVE, new Object[] {e, from, to});
+            etc.getLoader().callHook(PluginLoader.Hook.PLAYER_MOVE, new Object[] {e, from, to});
         }
         if (this.j) {
             this.g = this.e.l;
@@ -202,7 +201,7 @@ public class id extends ej
                 return;
             }
             if (i5 > etc.getInstance().getSpawnProtectionSize() || bool) {
-                if (!(Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
+                if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
                     this.e.ad.a(n, i1, i2);
             }
         } else if (paramhd.e == 2) {
@@ -212,7 +211,7 @@ public class id extends ej
                 return;
             }
             if (i5 > etc.getInstance().getSpawnProtectionSize() || bool) {
-                if (!(Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
+                if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
                     this.e.ad.a(n, i1, i2, i3);
             }
         } else if (paramhd.e == 3) {
@@ -260,7 +259,7 @@ public class id extends ej
                 blockPlaced.setX(blockPlaced.getX() + 1);
             Block blockClicked = new Block(etc.getServer().getBlockIdAt(m, n, i1), m, n, i1);
 
-            if (!(Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.BLOCK_CREATED, new Object[] {e, blockPlaced, blockClicked, paramfe.a})) {
+            if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_CREATED, new Object[] {e, blockPlaced, blockClicked, paramfe.a})) {
                 if (localgp != null) {
                     if (!etc.getInstance().isOnItemBlacklist(localgp.c) || bool) {
                         this.e.ad.a(this.e, this.d.e, localgp, m, n, i1, i2);
@@ -276,7 +275,7 @@ public class id extends ej
     }
 
     public void a(String paramString) {
-        etc.getInstance().getLoader().callHook(PluginLoader.Hook.DISCONNECT, new Object[] { e });
+        etc.getLoader().callHook(PluginLoader.Hook.DISCONNECT, new Object[] { e });
         a.info(getPlayer().getName() + " lost connection: " + paramString);
         this.d.f.c(this.e);
         this.c = true;
@@ -337,7 +336,7 @@ public class id extends ej
                 msg(Colors.Rose + "You are currently muted.");
                 return;
             }
-            if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.CHAT, new Object[]{e, str}))
+            if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.CHAT, new Object[]{e, str}))
                 return;
 
             String message = "<" + getPlayer().getColor() + getPlayer().getName() + Colors.White + "> " + str;
@@ -354,23 +353,13 @@ public class id extends ej
         b(new ba(msg));
     }
 
-    /**
-     * The number of pages needed to display available commands
-     * @param availableCommands
-     * @return
-     */
-    private Integer getNumberOfHelpCommandPages(List<String> availableCommands) {
-        return (int) Math.ceil((double) availableCommands.size()
-                / (double) COMMANDS_PER_PAGE);
-    }
-
     private void d(String paramString) {
         try {
             if (etc.getInstance().isLogging()) {
                 a.info("Command used by " + getPlayer().getName() + " " + paramString);
             }
             String[] split = paramString.split(" ");
-            if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.COMMAND, new Object[]{e, split})) {
+            if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.COMMAND, new Object[]{e, split})) {
                 return; //No need to go on, commands were parsed.
             }
             if (!getPlayer().canUseCommand(split[0]) && !split[0].startsWith("/#")) {
@@ -393,28 +382,31 @@ public class id extends ej
                     }
                 }
 
-                String page_no = (split.length > 1 ? split[1] : "1");
-                try {
-                    int amount = Integer.parseInt(page_no);
-                    if ((amount > getNumberOfHelpCommandPages(availableCommands))
-                            || (amount < 1)) {
-                        throw new NumberFormatException();
-                    }
+                msg(Colors.Blue + "Available commands (Page " + (split.length == 2 ? split[1] : "1") + " of " + (int) Math.ceil((double) availableCommands.size() / (double) 7) + ") [] = required <> = optional:");
+                if (split.length == 2) {
+                    try {
+                        int amount = Integer.parseInt(split[1]);
 
-                    msg(Colors.Blue + "Available commands (Page " + amount
-                            + " of "
-                            + getNumberOfHelpCommandPages(availableCommands)
-                            + ") [] = required <> = optional:");
-                    if (amount > 0) {
-                        amount = (amount - 1) * COMMANDS_PER_PAGE;
+                        if (amount > 0) {
+                            amount = (amount - 1) * 7;
+                        } else {
+                            amount = 0;
+                        }
+
+                        for (int i = amount; i < amount + 7; i++) {
+                            if (availableCommands.size() > i) {
+                                msg(Colors.Rose + availableCommands.get(i));
+                            }
+                        }
+                    } catch (NumberFormatException ex) {
+                        msg(Colors.Rose + "Not a valid page number.");
                     }
-                    for (int i = amount; i < (getNumberOfHelpCommandPages(availableCommands) == 1 ? availableCommands
-                            .size()
-                            : amount + COMMANDS_PER_PAGE); i++) {
-                        msg(Colors.Rose + availableCommands.get(i));
+                } else {
+                    for (int i = 0; i < 7; i++) {
+                        if (availableCommands.size() > i) {
+                            msg(Colors.Rose + availableCommands.get(i));
+                        }
                     }
-                } catch (NumberFormatException ex) {
-                    msg(Colors.Rose + "Not a valid page number.");
                 }
             } else if (split[0].equalsIgnoreCase("/reload")) {
                 etc.getInstance().load();
@@ -776,7 +768,7 @@ public class id extends ej
                     // adds player to ban list
                     this.d.f.c(player.getIP());
 
-                    etc.getInstance().getLoader().callHook(PluginLoader.Hook.IPBAN, new Object[]{player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
+                    etc.getLoader().callHook(PluginLoader.Hook.IPBAN, new Object[]{getPlayer().getUser(), player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
 
                     a.log(Level.INFO, "IP Banning " + player.getName() + " (IP: " + player.getIP() + ")");
                     msg(Colors.Rose + "IP Banning " + player.getName() + " (IP: " + player.getIP() + ")");
@@ -806,7 +798,7 @@ public class id extends ej
                     // adds player to ban list
                     this.d.f.a(player.getName());
 
-                    etc.getInstance().getLoader().callHook(PluginLoader.Hook.BAN, new Object[]{player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
+                    etc.getLoader().callHook(PluginLoader.Hook.BAN, new Object[]{getPlayer().getUser(), player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
 
                     if (split.length > 2) {
                         player.kick("Banned by " + getPlayer().getName() + ": " + etc.combineSplit(2, split, " "));
@@ -846,7 +838,7 @@ public class id extends ej
                         return;
                     }
 
-                    etc.getInstance().getLoader().callHook(PluginLoader.Hook.KICK, new Object[]{player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
+                    etc.getLoader().callHook(PluginLoader.Hook.KICK, new Object[]{getPlayer().getUser(), player.getUser(), split.length >= 3 ? etc.combineSplit(2, split, " ") : ""});
 
                     if (split.length > 2) {
                         player.kick("Kicked by " + getPlayer().getName() + ": " + etc.combineSplit(2, split, " "));
@@ -1010,14 +1002,14 @@ public class id extends ej
                 }
                 msg("Compass: " + etc.getCompassPointForDirection(degreeRotation) + " (" + (Math.round(degreeRotation * 10) / 10.0) + ")");
             } else if (split[0].equalsIgnoreCase("/listplugins")) {
-                msg(Colors.Rose + "Plugins" + Colors.White + ": " + etc.getInstance().getLoader().getPluginList());
+                msg(Colors.Rose + "Plugins" + Colors.White + ": " + etc.getLoader().getPluginList());
             } else if (split[0].equalsIgnoreCase("/reloadplugin")) {
                 if (split.length < 2) {
                     msg(Colors.Rose + "Correct usage is: /reloadplugin [plugin]");
                     return;
                 }
 
-                etc.getInstance().getLoader().reloadPlugin(split[1]);
+                etc.getLoader().reloadPlugin(split[1]);
                 msg(Colors.Rose + "Plugin reloaded.");
             } else if (split[0].equalsIgnoreCase("/enableplugin")) {
                 if (split.length < 2) {
@@ -1025,7 +1017,7 @@ public class id extends ej
                     return;
                 }
 
-                etc.getInstance().getLoader().enablePlugin(split[1]);
+                etc.getLoader().enablePlugin(split[1]);
                 msg(Colors.Rose + "Plugin enabled.");
             } else if (split[0].equalsIgnoreCase("/disableplugin")) {
                 if (split.length < 2) {
@@ -1033,7 +1025,7 @@ public class id extends ej
                     return;
                 }
 
-                etc.getInstance().getLoader().disablePlugin(split[1]);
+                etc.getLoader().disablePlugin(split[1]);
                 msg(Colors.Rose + "Plugin disabled.");
             } else if (split[0].equalsIgnoreCase("/compass")) {
                 double degreeRotation = ((getPlayer().getRotation() - 90) % 360);
@@ -1058,7 +1050,7 @@ public class id extends ej
                 }
             } else if (split[0].equalsIgnoreCase("/clearinventory")) {
                 Player target = getPlayer();
-                if (split.length >= 2) {
+                if (split.length >= 2 && getPlayer().isAdmin()) {
                     target = etc.getServer().matchPlayer(split[1]);
                 }
                 if (target != null) {
@@ -1089,7 +1081,7 @@ public class id extends ej
     //Arm animation
     public void a(o paramo) {
         if (paramo.b == 1) {
-            etc.getInstance().getLoader().callHook(PluginLoader.Hook.ARM_SWING, new Object[] { e });
+            etc.getLoader().callHook(PluginLoader.Hook.ARM_SWING, new Object[] { e });
             this.e.z();
         }
     }
@@ -1120,7 +1112,7 @@ public class id extends ej
         if (paramr.a == -1) {
             gp[] temp = this.e.aj.a;
             this.e.aj.a = paramr.b;
-            if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.INVENTORY_CHANGE, new Object[] { e })) {
+            if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.INVENTORY_CHANGE, new Object[] { e })) {
                 this.e.aj.a = temp;
                 getPlayer().getInventory().updateInventory();
             }
@@ -1151,19 +1143,19 @@ public class id extends ej
                 hb chest = (hb) localas;
                 gp[] temp = chest.getContents();
                 localas.a(paramib.e);
-                if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Chest(chest) }))
+                if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Chest(chest) }))
                     chest.setContents(temp);
             } else if (localas instanceof df) { //Furnace
                 df furnace = (df) localas;
                 gp[] temp = furnace.getContents();
                 localas.a(paramib.e);
-                if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Furnace(furnace) }))
+                if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Furnace(furnace) }))
                     furnace.setContents(temp);
             } else if (localas instanceof ig) { //Sign
                 ig sign = (ig) localas;
                 String[] temp = sign.e;
                 localas.a(paramib.e);
-                if ((Boolean)etc.getInstance().getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Sign(sign) }))
+                if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.COMPLEX_BLOCK_CHANGE, new Object[] { e, new Sign(sign) }))
                     sign.e = temp;
             }
             localas.c();
