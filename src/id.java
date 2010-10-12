@@ -615,12 +615,13 @@ public class id extends ej
 
                 Player player = etc.getServer().matchPlayer(split[1]);
 
-                if (getPlayer().getName().equalsIgnoreCase(player.getName())) {
-                    msg(Colors.Rose + "You're already here!");
-                    return;
-                }
+               
 
                 if (player != null) {
+					 if (getPlayer().getName().equalsIgnoreCase(player.getName())) {
+						msg(Colors.Rose + "You're already here!");
+						return;
+					}
                     a.info(getPlayer().getName() + " teleported to " + player.getName());
                     getPlayer().teleportTo(player);
                 } else {

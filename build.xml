@@ -58,7 +58,7 @@
         <jar destfile="${build_dir}/${ant.project.name}.jar">
             <manifest>
                 <attribute name="Main-Class" value="Main"/>
-                <attribute name="Class-Path" value=". minecraft_server.jar"/>
+                <attribute name="Class-Path" value="minecraft_server.jar mysql-connector-java-bin.jar plugins/"/>
             </manifest>
             <fileset dir="bin"/>
         </jar>
