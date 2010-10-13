@@ -200,20 +200,18 @@ public class id extends ej
             if (!getPlayer().canBuild()) {
                 return;
             }
-            if (i5 > etc.getInstance().getSpawnProtectionSize() || bool) {
+            if (i5 > etc.getInstance().getSpawnProtectionSize() || bool)
                 if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
                     this.e.ad.a(n, i1, i2);
-            }
         } else if (paramhd.e == 2) {
             this.e.ad.a();
         } else if (paramhd.e == 1) {
             if (!getPlayer().canBuild()) {
                 return;
             }
-            if (i5 > etc.getInstance().getSpawnProtectionSize() || bool) {
+            if (i5 > etc.getInstance().getSpawnProtectionSize() || bool)
                 if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_DESTROYED, new Object[] {e, etc.getServer().getBlockAt(n, i1, i2)}))
                     this.e.ad.a(n, i1, i2, i3);
-            }
         } else if (paramhd.e == 3) {
             double d2 = this.e.l - (n + 0.5D);
             double d3 = this.e.m - (i1 + 0.5D);
@@ -258,6 +256,7 @@ public class id extends ej
             else if(paramfe.e == 5)
                 blockPlaced.setX(blockPlaced.getX() + 1);
             Block blockClicked = new Block(etc.getServer().getBlockIdAt(m, n, i1), m, n, i1);
+            blockClicked.setFaceClicked(Block.Face.fromId(paramfe.e));
 
             if (!(Boolean)etc.getLoader().callHook(PluginLoader.Hook.BLOCK_CREATED, new Object[] {e, blockPlaced, blockClicked, paramfe.a})) {
                 if (localgp != null) {
@@ -607,13 +606,12 @@ public class id extends ej
 
                 Player player = etc.getServer().matchPlayer(split[1]);
 
-               
-
                 if (player != null) {
-					 if (getPlayer().getName().equalsIgnoreCase(player.getName())) {
-						msg(Colors.Rose + "You're already here!");
-						return;
-					}
+                    if (getPlayer().getName().equalsIgnoreCase(player.getName())) {
+                        msg(Colors.Rose + "You're already here!");
+                        return;
+                    }
+                    
                     a.info(getPlayer().getName() + " teleported to " + player.getName());
                     getPlayer().teleportTo(player);
                 } else {
@@ -627,12 +625,12 @@ public class id extends ej
 
                 Player player = etc.getServer().matchPlayer(split[1]);
 
-                if (getPlayer().getName().equalsIgnoreCase(split[1])) {
-                    msg(Colors.Rose + "Wow look at that! You teleported yourself to yourself!");
-                    return;
-                }
-
                 if (player != null) {
+                    if (getPlayer().getName().equalsIgnoreCase(player.getName())) {
+                        msg(Colors.Rose + "Wow look at that! You teleported yourself to yourself!");
+                        return;
+                    }
+
                     a.info(getPlayer().getName() + " teleported " + player.getName() + " to their self.");
                     player.teleportTo(getPlayer());
                 } else {
@@ -697,11 +695,7 @@ public class id extends ej
                         if (Item.isValidItem(itemId)) {
                             if (allowedItem || getPlayer().canIgnoreRestrictions()) {
                                 a.log(Level.INFO, "Giving " + toGive.getName() + " some " + itemId);
-                                if (amount == 255) {
-                                    toGive.giveItem(itemId, 255);
-                                } else {
-                                    toGive.giveItem(itemId, amount);
-                                }
+                                toGive.giveItem(itemId, amount);
 
                                 if (toGive.getName().equalsIgnoreCase(getPlayer().getName())) {
                                     msg(Colors.Rose + "There you go c:");
