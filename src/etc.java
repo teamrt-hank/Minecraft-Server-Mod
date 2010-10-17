@@ -24,6 +24,7 @@ public class etc {
     private boolean saveHomes = true;
     private boolean firstLoad = true;
     private boolean whitelistEnabled = false;
+	private boolean allowTNT = false;
     private int playerLimit = 20;
     private int spawnProtectionSize = 16;
     private LinkedHashMap<String, String> commands = new LinkedHashMap<String, String>();
@@ -110,6 +111,7 @@ public class etc {
             spawnProtectionSize = properties.getInt("spawn-protection-size", 16);
             logging = properties.getBoolean("logging", false);
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
+			allowTNT = properties.getBoolean("allow-tnt", false);
         } catch (Exception e) {
             log.log(Level.SEVERE, "Exception while reading from server.properties", e);
             // Just in case...
@@ -792,5 +794,14 @@ public class etc {
      */
     public void setShowUnknownCommand(boolean showUnknownCommand) {
         this.showUnknownCommand = showUnknownCommand;
+    }
+	
+	/**
+     * Returns true if TNT is allowed
+     * (will not damage world if false)
+     * @return allowTNT
+     */
+    public boolean allowTNT() {
+        return allowTNT;
     }
 }

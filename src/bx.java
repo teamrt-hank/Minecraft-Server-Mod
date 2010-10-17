@@ -50,6 +50,9 @@ public class bx extends dj
 
     if (this.a-- <= 0) {
       j();
+	  if (etc.getInstance().allowTNT()) {
+		b();
+	}
     }
     else
       this.h.a("smoke", this.l, this.m + 0.5D, this.n, 0.0D, 0.0D, 0.0D);
