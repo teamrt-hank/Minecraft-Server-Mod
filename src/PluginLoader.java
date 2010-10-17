@@ -83,6 +83,10 @@ public class PluginLoader {
          */
         COMPLEX_BLOCK_SEND,
         /**
+         * Calls onTeleport
+         */
+        TELEPORT,
+        /**
          * Unused.
          */
         NUM_HOOKS
@@ -163,26 +167,20 @@ public class PluginLoader {
             File file = new File("plugins/" + fileName + ".jar");
             URLClassLoader child = null;
             try {
-                child = new MyClassLoader(new URL[]{file.toURL()}, this.getClass().getClassLoader());
+                child = new MyClassLoader(new URL[]{file.toURI().toURL()}, Thread.currentThread().getContextClassLoader());
             } catch (MalformedURLException ex) {
                 log.log(Level.SEVERE, "Exception while loading class", ex);
             }
             Class c = Class.forName(fileName, true, child);
 
-            try {
-                Plugin plugin = (Plugin) c.newInstance();
-                plugin.setName(fileName);
-                plugin.enable();
-                synchronized (lock) {
-                    plugins.add(plugin);
-                    plugin.initialize();
-                }
-            } catch (InstantiationException ex) {
-                log.log(Level.SEVERE, "Exception while loading plugin", ex);
-            } catch (IllegalAccessException ex) {
-                log.log(Level.SEVERE, "Exception while loading plugin", ex);
+            Plugin plugin = (Plugin) c.newInstance();
+            plugin.setName(fileName);
+            plugin.enable();
+            synchronized (lock) {
+                plugins.add(plugin);
+                plugin.initialize();
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (Throwable ex) {
             log.log(Level.SEVERE, "Exception while loading plugin", ex);
         }
     }
@@ -355,6 +353,11 @@ public class PluginLoader {
                                 break;
                             case COMPLEX_BLOCK_SEND:
                                 if (listener.onSendComplexBlock(((ea) parameters[0]).getPlayer(), (ComplexBlock) parameters[1])) {
+                                    toRet = true;
+                                }
+                                break;
+                            case TELEPORT:
+                                if (listener.onTeleport(((ea) parameters[0]).getPlayer(), (Location) parameters[1], (Location) parameters[2])) {
                                     toRet = true;
                                 }
                                 break;

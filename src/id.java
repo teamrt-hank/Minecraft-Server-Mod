@@ -154,6 +154,14 @@ public class id extends ej
     }
 
     public void a(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2) {
+        Location from = new Location();
+        from.x = paramDouble1;
+        from.y = paramDouble2;
+        from.z = paramDouble3;
+        from.rotX = paramFloat1;
+        from.rotY = paramFloat2;
+        if ((Boolean)etc.getLoader().callHook(PluginLoader.Hook.TELEPORT, new Object[] {e, e.getPlayer().getLocation(), from}))
+            return;
         this.j = false;
         this.g = paramDouble1;
         this.h = paramDouble2;
@@ -943,6 +951,10 @@ public class id extends ej
                     } else {
                         msg(Colors.Rose + "Correct usage is: /setwarp [warpname]");
                     }
+                    return;
+                }
+                if (split[1].contains(":")) {
+                    msg("You can't set a warp with \":\" in its name");
                     return;
                 }
                 Warp warp = new Warp();
