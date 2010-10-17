@@ -804,4 +804,12 @@ public class etc {
     public boolean allowTNT() {
         return allowTNT;
     }
+	
+	/**
+     * Sets whether or not TNT is allowed
+     * @param allowTNT whether or not it damages world
+     */
+    public void setAllowTNT(boolean allowTNT) {
+        this.allowTNT = allowTNT;
+    }
 }

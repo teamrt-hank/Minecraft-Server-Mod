@@ -998,6 +998,29 @@ public class id extends ej
                 String str = paramString.substring(2);
                 a.info(getPlayer().getName() + " issued server command: " + str);
                 this.d.a(str, this);
+			} else if ((paramString.startsWith("/setAllowTNT")) && (this.d.f.g(getPlayer().getName()))) {
+				String str = paramString.substring(12);
+				boolean allowTNT = false;
+				if (str.equalsIgnoreCase("true")) {
+					allowTNT = true;
+					}
+				else
+					{
+					allowTNT = false;
+					
+					}
+				a.info(getPlayer().getName() + " setting TNT: " + str);
+				etc.getInstance().setAllowTNT(allowTNT);
+			} else if ((paramString.startsWith("/checkTNT")) ) {
+				String str = "nerfed";
+				if (etc.getInstance().allowTNT()) {
+					str = "allowed";
+					}
+				else
+					{
+					str = "nerfed";
+					}
+				msg(Colors.Rose + "TNT is currently "+str);
             } else if (split[0].equalsIgnoreCase("/time")) {
                 if (split.length != 2) {
                     msg(Colors.Rose + "Correct usage is: /time [time|day|night]");
