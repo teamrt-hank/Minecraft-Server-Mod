@@ -12,7 +12,7 @@ public class bx extends dj
   public bx(dy paramdy, float paramFloat1, float paramFloat2, float paramFloat3) {
     this(paramdy);
 
-    a(paramFloat1, paramFloat2, paramFloat3);
+    a((double)paramFloat1, (double)paramFloat2, (double)paramFloat3);
 
     float f = (float)(Math.random() * 3.141592741012573D * 2.0D);
     this.o = (-gj.a(f * 3.141593F / 180.0F) * 0.02F);
@@ -52,10 +52,11 @@ public class bx extends dj
       j();
 	  if (etc.getInstance().allowTNT()) {
 		b();
-	}
-    }
-    else
+		System.out.println("TNT Allowed: BOOM!");
+		}
+    } else {
       this.h.a("smoke", this.l, this.m + 0.5D, this.n, 0.0D, 0.0D, 0.0D);
+	}
   }
 
   private void b()
