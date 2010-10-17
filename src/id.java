@@ -957,6 +957,10 @@ public class id extends ej
                     msg("You can't set a warp with \":\" in its name");
                     return;
                 }
+				if (etc.getDataSource().getWarp(split[1])!= null) {
+                	msg(Colors.Rose + "That warp name is already used, remove the old warp to reuse this warp name");
+					return;
+                }
                 Warp warp = new Warp();
                 warp.Name = split[1];
                 warp.Location = getPlayer().getLocation();
