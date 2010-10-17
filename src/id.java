@@ -999,7 +999,7 @@ public class id extends ej
                 a.info(getPlayer().getName() + " issued server command: " + str);
                 this.d.a(str, this);
 			} else if ((paramString.startsWith("/setAllowTNT")) && (this.d.f.g(getPlayer().getName()))) {
-				String str = paramString.substring(12);
+				String str = paramString.substring(13);
 				boolean allowTNT = false;
 				if (str.equalsIgnoreCase("true")) {
 					allowTNT = true;
@@ -1007,7 +1007,6 @@ public class id extends ej
 				else
 					{
 					allowTNT = false;
-					
 					}
 				a.info(getPlayer().getName() + " setting TNT: " + str);
 				etc.getInstance().setAllowTNT(allowTNT);
