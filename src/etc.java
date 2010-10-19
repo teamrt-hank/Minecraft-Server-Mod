@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +37,7 @@ public class etc {
     private PluginLoader loader;
     private boolean logging = false;
     private boolean showUnknownCommand = true;
+    private int version = 1;
 
     private etc() {
         commands.put("/help", "[Page] - Shows a list of commands. 7 per page.");
@@ -112,6 +116,12 @@ public class etc {
             logging = properties.getBoolean("logging", false);
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
 			allowTNT = properties.getBoolean("allow-tnt", false);
+            URL url = this.getClass().getResource("/version.txt");
+            if (url != null) {
+                InputStreamReader ins = new InputStreamReader(url.openStream());
+                BufferedReader bufferedReader = new BufferedReader( ins );
+                version = Integer.parseInt(bufferedReader.readLine());
+            }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Exception while reading from server.properties", e);
             // Just in case...
@@ -306,6 +316,7 @@ public class etc {
             log.info("Server mod help:");
             log.info("help          Displays this mod's and server's help");
             log.info("mod-help      Displays this mod's help");
+            log.info("version       Displays the server version");
             log.info("reload        Reloads the config");
             log.info("modify        Type modify for more info");
             log.info("whitelist     Type whitelist for more info");
@@ -436,6 +447,8 @@ public class etc {
 
             etc.getLoader().disablePlugin(split[1]);
             log.info("Plugin disabled.");
+        } else if (split[0].equalsIgnoreCase("version")) {
+            log.info("Hey0 Server Mod Build " + version);
         } else {
             dontParseRegular = false;
         }
@@ -795,6 +808,7 @@ public class etc {
     public void setShowUnknownCommand(boolean showUnknownCommand) {
         this.showUnknownCommand = showUnknownCommand;
     }
+
 	
 	/**
      * Returns true if TNT is allowed
@@ -811,5 +825,13 @@ public class etc {
      */
     public void setAllowTNT(boolean allowTNT) {
         this.allowTNT = allowTNT;
+
+
+    /**
+     * Return the current build of the mod
+     * @return build/version
+     */
+    public int getVersion() {
+        return version;
     }
 }
