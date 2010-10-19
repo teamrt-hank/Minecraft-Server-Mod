@@ -825,7 +825,7 @@ public class etc {
      */
     public void setAllowTNT(boolean allowTNT) {
         this.allowTNT = allowTNT;
-
+	}
 
     /**
      * Return the current build of the mod
