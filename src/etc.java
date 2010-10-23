@@ -28,6 +28,7 @@ public class etc {
     private boolean firstLoad = true;
     private boolean whitelistEnabled = false;
 	private boolean allowTNT = false;
+	private int hardMapLimit = 15;
     private int playerLimit = 20;
     private int spawnProtectionSize = 16;
     private LinkedHashMap<String, String> commands = new LinkedHashMap<String, String>();
@@ -116,6 +117,7 @@ public class etc {
             logging = properties.getBoolean("logging", false);
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
 			allowTNT = properties.getBoolean("allow-tnt", false);
+			hardMapLimit = properties.getInt("hard-map-limit", 15);
             URL url = this.getClass().getResource("/version.txt");
             if (url != null) {
                 InputStreamReader ins = new InputStreamReader(url.openStream());
@@ -826,6 +828,16 @@ public class etc {
     public void setAllowTNT(boolean allowTNT) {
         this.allowTNT = allowTNT;
 	}
+	
+	/**
+     * Returns true if TNT is allowed
+     * (will not damage world if false)
+     * @return allowTNT
+     */
+    public int getLimit() {
+        return ((int)Math.pow(2,hardMapLimit) * 12); // 3/4 of limit * 16
+    }
+	
 
     /**
      * Return the current build of the mod

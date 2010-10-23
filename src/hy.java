@@ -175,20 +175,42 @@ public class hy
 
     byte[] arrayOfByte = new byte[32768];
     im localim = new im(this.p, arrayOfByte, paramInt1, paramInt2);
-	System.out.println("Generating chunk (" + Integer.toString(paramInt1) + ","+ Integer.toString(paramInt1)+")");
+	
+	int big1 = paramInt1 * 16;
+	int big2 = paramInt2 * 16;
+	int distance = Math.max(Math.abs(big1 - this.p.n), Math.abs(big2 - this.p.p));
+	int maplimit = etc.getInstance().getLimit();
+	
+	
+	int shift1 = big1 >> 4;
+	int shift2 = big2 >> 4;
+	int mask1 = big1 & 0xF;
+	int mask2 = big2 & 0xF;
+	
+	//System.out.println("Generating chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(shift1)+","+Integer.toString(shift2)+" " +Integer.toString(mask1)+","+Integer.toString(mask2) + " : " + Integer.toString(distance));
 		
-    a(paramInt1, paramInt2, arrayOfByte);
-    b(paramInt1, paramInt2, arrayOfByte);
-	for(int k1 = 0; k1 < 16; k1++) {
-            for(int l1 = 0; l1 < 16; l1++) {
-                for(int k2 = 127; k2 >= 0; k2--) {
-                    int l2 = (k1 * 16 + l1) * 128 + k2;
-                    arrayOfByte[l2] = 48; // Lots of moss.
-                }
-            }
-        }
-    this.u.a(this, this.p, paramInt1, paramInt2, arrayOfByte);
-
+    
+	if (distance >= (maplimit+1)) // hard limit
+	{
+		System.out.println("Generating void chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(distance));
+		arrayOfByte = new byte[32768];
+	}
+	else if (distance >= (maplimit-15) && distance <= (maplimit)) // soft limit
+	{
+		System.out.println("Generating border chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(distance));
+		for(int k1 = 0; k1 < 32768; k1++) {
+			arrayOfByte[k1] = 48; // Lots of moss.
+		}
+	}
+	else
+	{
+		a(paramInt1, paramInt2, arrayOfByte);
+		b(paramInt1, paramInt2, arrayOfByte);
+		
+		this.u.a(this, this.p, paramInt1, paramInt2, arrayOfByte);	
+	}
+	
+    
     localim.b();
 
     return localim;
