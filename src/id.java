@@ -1095,7 +1095,30 @@ public class id extends ej
                 } else {
                     msg(Colors.Rose + "Target not found");
                 }
-            } else if (split[0].equalsIgnoreCase("/version")) {
+            } else if ((paramString.startsWith("/setAllowTNT")) && (this.d.f.g(getPlayer().getName()))) {
+				String str = paramString.substring(13);
+				boolean allowTNT = false;
+				if (str.equalsIgnoreCase("true")) {
+					allowTNT = true;
+				}
+				else
+				{
+					allowTNT = false;
+				}
+				a.info(getPlayer().getName() + " setting TNT: " + str);
+				etc.getInstance().setAllowTNT(allowTNT);
+			} else if ((paramString.startsWith("/checkTNT")) ) {
+				String str = "nerfed";
+				if (etc.getInstance().allowTNT()) {
+					str = "allowed";
+				}
+				else
+				{
+					str = "nerfed";
+				}
+				msg(Colors.Rose + "TNT is currently "+str);
+			}
+			else if (split[0].equalsIgnoreCase("/version")) {
                 msg(Colors.Gold + "Hey0 Server Mod Build " + etc.getInstance().getVersion());
             } else {
                 a.info(getPlayer().getName() + " tried command " + paramString);
