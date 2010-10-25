@@ -178,9 +178,13 @@ public class hy
 	
 	int big1 = paramInt1 * 16;
 	int big2 = paramInt2 * 16;
-	int distance = Math.max(Math.abs(big1 - this.p.n), Math.abs(big2 - this.p.p));
-	int maplimit = etc.getInstance().getLimit();
 	
+	int[] mapLimits = new int[] {0,0,0};
+	mapLimits = etc.getInstance().getLimits();
+	
+	int distance = Math.max(Math.abs(big1 - mapLimits[0]), Math.abs(big2 - mapLimits[1]));
+	
+	int mapLimit = mapLimits[2];
 	
 	int shift1 = big1 >> 4;
 	int shift2 = big2 >> 4;
@@ -190,12 +194,12 @@ public class hy
 	//System.out.println("Generating chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(shift1)+","+Integer.toString(shift2)+" " +Integer.toString(mask1)+","+Integer.toString(mask2) + " : " + Integer.toString(distance));
 		
     
-	if (distance >= (maplimit+1)) // hard limit
+	if (distance >= (mapLimit+1)) // hard limit
 	{
 		System.out.println("Generating void chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(distance));
 		arrayOfByte = new byte[32768];
 	}
-	else if (distance >= (maplimit-15) && distance <= (maplimit)) // soft limit
+	else if (distance >= (mapLimit-15) && distance <= (mapLimit)) // soft limit
 	{
 		System.out.println("Generating border chunk (" + Integer.toString(big1) + ","+ Integer.toString(big2)+") - "+Integer.toString(distance));
 		for(int k1 = 0; k1 < 32768; k1++) {

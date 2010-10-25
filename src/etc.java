@@ -28,6 +28,7 @@ public class etc {
     private boolean firstLoad = true;
     private boolean whitelistEnabled = false;
 	private boolean allowTNT = false;
+	private boolean useSpawnAsOrigin = false;
 	private int hardMapLimit = 15;
     private int playerLimit = 20;
     private int spawnProtectionSize = 16;
@@ -118,6 +119,7 @@ public class etc {
             showUnknownCommand = properties.getBoolean("show-unknown-command", true);
 			allowTNT = properties.getBoolean("allow-tnt", false);
 			hardMapLimit = properties.getInt("hard-map-limit", 15);
+			useSpawnAsOrigin = properties.getBoolean("use-spawn-as-origin", false);
             URL url = this.getClass().getResource("/version.txt");
             if (url != null) {
                 InputStreamReader ins = new InputStreamReader(url.openStream());
@@ -834,9 +836,19 @@ public class etc {
      * (will not damage world if false)
      * @return allowTNT
      */
-    public int getLimit() {
-        return ((int)Math.pow(2,hardMapLimit) * 12); // 3/4 of limit * 16
-    }
+    public int[] getLimits() {
+		int[] mapLimits = new int[] {0,0,0};
+		if (useSpawnAsOrigin)
+		{
+			Location spawn = etc.getServer().getSpawnLocation();
+			mapLimits[0] = (int)spawn.x;
+			mapLimits[1] = (int)spawn.z;
+		}
+		
+		mapLimits[2] = ((int)Math.pow(2,hardMapLimit) * 12); // 3/4 of limit * 16
+		
+		return mapLimits; 
+	}
 	
 
     /**
