@@ -1109,7 +1109,7 @@ public class id extends ej
                 	catch (NumberFormatException nfe) {
                 		if(!Mob.isValid(split[2])) {
                 			msg(Colors.Rose + "Invalid mob name or number of mobs.");
-                    		msg(Colors.Rose + "Invalid mob. Name has to start with a capital like so: Pig");
+                    		msg(Colors.Rose + "Mob names have to start with a capital like so: Pig");
                 		} else {
                      		Mob mob = new Mob(split[1], getPlayer().getLocation());
                         	mob.spawn(new Mob(split[2]));
